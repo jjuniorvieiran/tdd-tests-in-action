@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Leilao {
+	
+	
 
 	private String descricao;
 	private List<Lance> lances;

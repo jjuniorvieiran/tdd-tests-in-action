@@ -65,4 +65,7 @@ public class LeilaoTest {
         Lance ultimoLance = leilao.getLances().get(ultimo);
         assertEquals(11000.0, ultimoLance.getValor(), 0.00001);
     }
+    
+    
+    
 }
