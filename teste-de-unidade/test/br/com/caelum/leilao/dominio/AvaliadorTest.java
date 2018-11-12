@@ -1,5 +1,9 @@
 package br.com.caelum.leilao.dominio;
 
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -9,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.caelum.leilao.builder.CriadorDeLeilao;
+
 
 public class AvaliadorTest {
 
@@ -20,9 +25,16 @@ public class AvaliadorTest {
 	@Before
 	public void criaAvaliador() {
 		this.leiloeiro = new Avaliador();
-        this.joao = new Usuario("João");
-        this.jose = new Usuario("José");
-        this.maria = new Usuario("Maria");
+		this.joao = new Usuario("João");
+		this.jose = new Usuario("José");
+		this.maria = new Usuario("Maria");
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void naoDeveAvaliarLeiloesSemNenhumLanceDado() {
+		Leilao leilao = new CriadorDeLeilao().para("Playstation 3 Novo").constroi();
+
+		leiloeiro.avalia(leilao);
 	}
 
 	@Test
@@ -39,9 +51,9 @@ public class AvaliadorTest {
 		Avaliador leiloeiro = new Avaliador();
 		leiloeiro.avalia(leilao);
 
-		// comparando a saida com o esperado
-		Assert.assertEquals(400, leiloeiro.getMaiorLance(), 0.0001);
-		Assert.assertEquals(250, leiloeiro.getMenorLance(), 0.0001);
+		assertThat(leiloeiro.getMenorLance(), equalTo(250.0));
+        assertThat(leiloeiro.getMaiorLance(), equalTo(400.0));
+    
 	}
 
 	@Test
@@ -67,9 +79,13 @@ public class AvaliadorTest {
 
 		List<Lance> maiores = leiloeiro.getTresMaiores();
 		assertEquals(3, maiores.size());
-		assertEquals(400.0, maiores.get(0).getValor(), 0.00001);
-		assertEquals(300.0, maiores.get(1).getValor(), 0.00001);
-		assertEquals(200.0, maiores.get(2).getValor(), 0.00001);
+		
+        assertThat(maiores, hasItems(
+                new Lance(maria, 400), 
+                new Lance(joao, 300),
+                new Lance(maria, 200)
+        ));
+	
 	}
 
 }
